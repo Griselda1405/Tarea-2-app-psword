@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Contraseñas Seguras</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #f4f4f4;
+            text-align: center;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .password-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        input {
+            flex: 1;
+            padding: 10px;
+            font-size: 18px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin-left: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Generador de Contraseñas</h1>
+        <div class="password-box">
+            <input type="text" id="password" >
+            <button id="copy-btn">📋</button>
+        </div>
+        <div class="controls">
+            <label for="length">Longitud: <span id="length-value">12</span></label>
+            <input type="range" id="length" min="8" max="50" value="12">
+            <div class="options">
+                <label><input type="checkbox" id="uppercase" checked> Mayúsculas</label>
+                <label><input type="checkbox" id="lowercase" checked> Minúsculas</label>
+                <label><input type="checkbox" id="numbers" checked> Números</label>
+                <label><input type="checkbox" id="symbols"> Símbolos</label>
+            </div>
+            <button id="generate">Generar Contraseña</button>
+        </div>
+    </div>
+    <script>
+        const passwordField = document.getElementById("password");
+        const copyBtn = document.getElementById("copy-btn");
+        const generateBtn = document.getElementById("generate");
+        const lengthSlider = document.getElementById("length");
+        const lengthValue = document.getElementById("length-value");
+        const uppercaseCheckbox = document.getElementById("uppercase");
+        const lowercaseCheckbox = document.getElementById("lowercase");
+        const numbersCheckbox = document.getElementById("numbers");
+        const symbolsCheckbox = document.getElementById("symbols");
+        
+        lengthSlider.addEventListener("input", () => {
+            lengthValue.textContent = lengthSlider.value;
+        });
+        
+        generateBtn.addEventListener("click", generatePassword);
+        copyBtn.addEventListener("click", () => {
+            passwordField.select();
+            document.execCommand("copy");
+        });
+        
+        function generatePassword() {
+            const length = lengthSlider.value;
+            const uppercase = uppercaseCheckbox.checked;
+            const lowercase = lowercaseCheckbox.checked;
+            const numbers = numbersCheckbox.checked;
+            const symbols = symbolsCheckbox.checked;
+            
+            const upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const lowerChars = "abcdefghijklmnopqrstuvwxyz";
+            const numberChars = "0123456789";
+            const symbolChars = "!@#$%^&*()_+[]{}|;:,.<>?";
+            
+            let charPool = "";
+            if (uppercase) charPool += upperChars;
+            if (lowercase) charPool += lowerChars;
+            if (numbers) charPool += numberChars;
+            if (symbols) charPool += symbolChars;
+            
+            if (charPool === "") {
+                passwordField.value = "Seleccione al menos una opción";
+                return;
+            }
+            
+            let password = "";
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * charPool.length);
+                password += charPool[randomIndex];
+            }
+            
+            passwordField.value = password;
+        }
+    </script>
+</body>
+</html>
